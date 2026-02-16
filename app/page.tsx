@@ -1,9 +1,15 @@
 "use client";
 import dynamic from "next/dynamic";
-import { Container, ErrorMessage, LoadingSpinner } from "./components";
+import {
+  CityFilter,
+  Container,
+  ErrorMessage,
+  LoadingSpinner,
+} from "./components";
 import StationsList from "./components/stations/stations-list";
 import { useStations } from "./lib/useStations";
 import { useMemo, useState } from "react";
+import { getUniqueCities } from "./utils/stations";
 
 // Dynamically import MapView to avoid SSR issues with Leaflet
 const MapView = dynamic(() => import("@/app/components/stations/map-view"), {
@@ -18,12 +24,20 @@ const MapView = dynamic(() => import("@/app/components/stations/map-view"), {
 export default function Home() {
   const { stations, loading, error } = useStations();
 
+  const [selectedCity, setSelectedCity] = useState("");
   const [selectedStationId, setSelectedStationId] = useState<number | null>(
     null,
   );
 
+  const cities = useMemo(() => getUniqueCities(stations), [stations]);
+
   const handleStationClick = (stationId: number) => {
     setSelectedStationId(stationId);
+  };
+
+  const handleCityChange = (city: string) => {
+    setSelectedCity(city);
+    setSelectedStationId(null);
   };
 
   if (loading) return <LoadingSpinner />;
@@ -38,11 +52,20 @@ export default function Home() {
           </div>
           {/* List of stations */}
           <div className="md:col-span-4 col-span-12 mb-8 md:mb-0">
-            <StationsList
-              stations={stations}
-              selectedStationId={selectedStationId}
-              onStationClick={handleStationClick}
-            />
+            <div className="flex flex-col gap-4">
+              <div className="bg-white rounded-lg shadow-lg p-4">
+                <CityFilter
+                  cities={cities}
+                  selectedCity={selectedCity}
+                  onCityChange={handleCityChange}
+                />
+              </div>
+              <StationsList
+                stations={stations}
+                selectedStationId={selectedStationId}
+                onStationClick={handleStationClick}
+              />
+            </div>
           </div>
           {/* Stations map view */}
           <div className="md:col-span-8 col-span-12">
