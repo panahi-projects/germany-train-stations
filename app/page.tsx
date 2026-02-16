@@ -40,7 +40,7 @@ export default function Home() {
           <div className="md:col-span-4 col-span-12 mb-8 md:mb-0">
             <StationsList
               stations={stations}
-              selectedStationId={null}
+              selectedStationId={selectedStationId}
               onStationClick={handleStationClick}
             />
           </div>
