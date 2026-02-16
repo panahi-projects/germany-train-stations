@@ -3,6 +3,7 @@ import dynamic from "next/dynamic";
 import { Container, ErrorMessage, LoadingSpinner } from "./components";
 import StationsList from "./components/stations/stations-list";
 import { useStations } from "./lib/useStations";
+import { useMemo, useState } from "react";
 
 // Dynamically import MapView to avoid SSR issues with Leaflet
 const MapView = dynamic(() => import("@/app/components/stations/map-view"), {
@@ -17,7 +18,13 @@ const MapView = dynamic(() => import("@/app/components/stations/map-view"), {
 export default function Home() {
   const { stations, loading, error } = useStations();
 
-  console.log("Stations:::", stations);
+  const [selectedStationId, setSelectedStationId] = useState<number | null>(
+    null,
+  );
+
+  const handleStationClick = (stationId: number) => {
+    setSelectedStationId(stationId);
+  };
 
   if (loading) return <LoadingSpinner />;
   if (error) return <ErrorMessage message={error} />;
@@ -34,12 +41,15 @@ export default function Home() {
             <StationsList
               stations={stations}
               selectedStationId={null}
-              onStationClick={() => {}}
+              onStationClick={handleStationClick}
             />
           </div>
           {/* Stations map view */}
           <div className="md:col-span-8 col-span-12">
-            <MapView stations={stations} />
+            <MapView
+              selectedStationId={selectedStationId}
+              stations={stations}
+            />
           </div>
         </div>
       </Container>

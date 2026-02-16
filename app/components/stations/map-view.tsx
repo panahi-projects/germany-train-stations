@@ -65,6 +65,17 @@ const MapView = ({ stations, selectedStationId }: MapViewProps) => {
       mapRef.current.fitBounds(bounds, { padding: [50, 50] });
     }
   }, [stations]);
+
+  // Handle selected station
+  useEffect(() => {
+    if (!mapRef.current || !selectedStationId) return;
+
+    const marker = markersRef.current.get(selectedStationId);
+    if (marker) {
+      mapRef.current.setView(marker.getLatLng(), 12, { animate: true });
+      marker.openPopup();
+    }
+  }, [selectedStationId]);
   return (
     <div
       ref={mapContainerRef}
