@@ -1,23 +1,25 @@
 "use client";
-import { useEffect, useState } from "react";
-import { Container } from "./components";
-import { Station } from "./types";
-import { fetchStations } from "./lib/api";
+import dynamic from "next/dynamic";
+import { Container, LoadingSpinner } from "./components";
 import StationsList from "./components/stations/stations-list";
-import MapView from "./components/stations/map-view";
+import { useStations } from "./lib/useStations";
+
+// Dynamically import MapView to avoid SSR issues with Leaflet
+const MapView = dynamic(() => import("@/app/components/stations/map-view"), {
+  ssr: false,
+  loading: () => (
+    <div className="w-full h-full bg-gray-100 rounded-lg flex items-center justify-center">
+      <p className="text-gray-600">Loading map...</p>
+    </div>
+  ),
+});
 
 export default function Home() {
-  const [stations, setStations] = useState<Station[]>([]);
-  useEffect(() => {
-    async function loadData() {
-      const data = await fetchStations();
-      console.log("Data: ", data);
+  const { stations, loading, error } = useStations();
 
-      setStations(data);
-    }
-    loadData();
-  }, []);
+  console.log("Stations:::", stations);
 
+  if (loading) return <LoadingSpinner />;
   return (
     <div>
       <Container className="my-8">

@@ -10,3 +10,9 @@ export interface MapViewProps {
   stations: Station[];
   selectedStationId: number | null;
 }
+
+export interface UseStationsReturn {
+  stations: Station[];
+  loading: boolean;
+  error: string | null;
+}
