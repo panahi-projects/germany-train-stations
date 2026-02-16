@@ -1,81 +1,101 @@
 "use client";
-import React, { useEffect, useRef } from "react";
-// @ts-expect-error
+
+import React, { useEffect, useRef, useState } from "react";
 import "leaflet/dist/leaflet.css";
-import L from "leaflet";
 import { MapViewProps } from "@/app/types";
 
-// Fix for default marker icon
-delete (L.Icon.Default.prototype as any)._getIconUrl;
-L.Icon.Default.mergeOptions({
-  iconRetinaUrl:
-    "https://unpkg.com/leaflet@1.9.4/dist/images/marker-icon-2x.png",
-  iconUrl: "https://unpkg.com/leaflet@1.9.4/dist/images/marker-icon.png",
-  shadowUrl: "https://unpkg.com/leaflet@1.9.4/dist/images/marker-shadow.png",
-});
-
 const MapView = ({ stations, selectedStationId }: MapViewProps) => {
-  const mapRef = useRef<L.Map | null>(null);
-  const markersRef = useRef<Map<number, L.Marker>>(new Map());
+  const mapRef = useRef<any>(null);
+  const leafletRef = useRef<any>(null);
+  const markersRef = useRef<Map<number, any>>(new Map());
   const mapContainerRef = useRef<HTMLDivElement>(null);
+  const hasInitializedRef = useRef(false);
+
+  const [isMapReady, setIsMapReady] = useState(false);
 
   // Initialize map
   useEffect(() => {
-    if (!mapContainerRef.current || mapRef.current) return;
+    if (hasInitializedRef.current) return;
+    if (!mapContainerRef.current) return;
+    if (mapRef.current) return;
 
-    // Center on Germany
-    const map = L.map(mapContainerRef.current).setView([51.1657, 10.4515], 6);
+    hasInitializedRef.current = true;
 
-    L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
-      attribution:
-        '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
-      maxZoom: 19,
-    }).addTo(map);
+    const initMap = async () => {
+      const L = (await import("leaflet")).default;
+      leafletRef.current = L;
 
-    mapRef.current = map;
+      // Fix marker icons
+      delete (L.Icon.Default.prototype as any)._getIconUrl;
+      L.Icon.Default.mergeOptions({
+        iconRetinaUrl:
+          "https://unpkg.com/leaflet@1.9.4/dist/images/marker-icon-2x.png",
+        iconUrl: "https://unpkg.com/leaflet@1.9.4/dist/images/marker-icon.png",
+        shadowUrl:
+          "https://unpkg.com/leaflet@1.9.4/dist/images/marker-shadow.png",
+      });
+
+      const map = L.map(mapContainerRef.current!).setView(
+        [51.1657, 10.4515],
+        6,
+      );
+
+      L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
+        attribution:
+          '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
+        maxZoom: 19,
+      }).addTo(map);
+
+      mapRef.current = map;
+      setIsMapReady(true);
+    };
+
+    initMap();
 
     return () => {
-      map.remove();
-      mapRef.current = null;
+      if (mapRef.current) {
+        mapRef.current.remove();
+        mapRef.current = null;
+      }
     };
   }, []);
 
-  // Update markers when stations change
+  // Update markers AFTER map is ready
   useEffect(() => {
-    if (!mapRef.current) return;
+    if (!isMapReady || !mapRef.current || !leafletRef.current) return;
 
-    // Clear existing markers
+    const L = leafletRef.current;
+
     markersRef.current.forEach((marker) => marker.remove());
     markersRef.current.clear();
 
-    // Add new markers
     stations.forEach((station) => {
       const marker = L.marker([station.lat, station.lng])
         .bindPopup(`<strong>${station.name}</strong><br/>${station.city}`)
-        .addTo(mapRef.current!);
+        .addTo(mapRef.current);
 
       markersRef.current.set(station.id, marker);
     });
 
-    // Fit bounds if there are stations
     if (stations.length > 0) {
       const bounds = L.latLngBounds(
         stations.map((s) => [s.lat, s.lng] as [number, number]),
       );
       mapRef.current.fitBounds(bounds, { padding: [50, 50] });
     }
-  }, [stations]);
+  }, [stations, isMapReady]);
 
   // Handle selected station
   useEffect(() => {
-    if (!mapRef.current || !selectedStationId) return;
+    if (!isMapReady || !selectedStationId) return;
 
     const marker = markersRef.current.get(selectedStationId);
     if (marker) {
       mapRef.current.setView(marker.getLatLng(), 12, { animate: true });
       marker.openPopup();
     }
-  }, [selectedStationId]);
+  }, [selectedStationId, isMapReady]);
+
   return (
     <div
       ref={mapContainerRef}

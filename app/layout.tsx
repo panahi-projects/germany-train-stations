@@ -1,6 +1,4 @@
 import type { Metadata } from "next";
-
-// @ts-expect-error
 import "./globals.css";
 import { Container } from "./components";
 
@@ -17,8 +15,6 @@ export const metadata: Metadata = {
     "PANTohealth",
   ],
   authors: [{ name: "Saeed Panahi" }],
-  viewport: "width=device-width, initial-scale=1",
-  themeColor: "#3b82f6",
   openGraph: {
     title: "German Train Stations",
     description: "Explore train stations across Germany on an interactive map",
