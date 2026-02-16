@@ -5,7 +5,3 @@ export interface Station {
   lat: number;
   lng: number;
 }
-
-export interface StationsResponse {
-  stations: Station[];
-}
