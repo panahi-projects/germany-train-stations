@@ -5,3 +5,8 @@ export interface Station {
   lat: number;
   lng: number;
 }
+
+export interface MapViewProps {
+  stations: Station[];
+  selectedStationId: number | null;
+}
