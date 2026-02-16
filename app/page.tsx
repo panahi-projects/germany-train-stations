@@ -1,6 +1,6 @@
 "use client";
 import dynamic from "next/dynamic";
-import { Container, LoadingSpinner } from "./components";
+import { Container, ErrorMessage, LoadingSpinner } from "./components";
 import StationsList from "./components/stations/stations-list";
 import { useStations } from "./lib/useStations";
 
@@ -20,6 +20,7 @@ export default function Home() {
   console.log("Stations:::", stations);
 
   if (loading) return <LoadingSpinner />;
+  if (error) return <ErrorMessage message={error} />;
   return (
     <div>
       <Container className="my-8">
