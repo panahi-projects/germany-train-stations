@@ -12,7 +12,8 @@ const MapView = () => {
   useEffect(() => {
     if (!mapContainerRef.current || mapRef.current) return;
 
-    const map = L.map(mapContainerRef.current).setView([0, 0], 6);
+    // Center on Germany
+    const map = L.map(mapContainerRef.current).setView([51.1657, 10.4515], 6);
 
     L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
       attribution:
