@@ -9,7 +9,7 @@ import {
 import StationsList from "./components/stations/stations-list";
 import { useStations } from "./lib/useStations";
 import { useMemo, useState } from "react";
-import { getUniqueCities } from "./utils/stations";
+import { filterStationsByCity, getUniqueCities } from "./utils/stations";
 
 // Dynamically import MapView to avoid SSR issues with Leaflet
 const MapView = dynamic(() => import("@/app/components/stations/map-view"), {
@@ -30,6 +30,10 @@ export default function Home() {
   );
 
   const cities = useMemo(() => getUniqueCities(stations), [stations]);
+  const filteredStations = useMemo(
+    () => filterStationsByCity(stations, selectedCity),
+    [stations, selectedCity],
+  );
 
   const handleStationClick = (stationId: number) => {
     setSelectedStationId(stationId);
@@ -61,17 +65,17 @@ export default function Home() {
                 />
               </div>
               <StationsList
-                stations={stations}
+                stations={filteredStations}
                 selectedStationId={selectedStationId}
                 onStationClick={handleStationClick}
               />
             </div>
           </div>
           {/* Stations map view */}
-          <div className="md:col-span-8 col-span-12">
+          <div className="md:col-span-8 col-span-12 min-h-[800px]">
             <MapView
               selectedStationId={selectedStationId}
-              stations={stations}
+              stations={filteredStations}
             />
           </div>
         </div>

@@ -80,7 +80,7 @@ const MapView = ({ stations, selectedStationId }: MapViewProps) => {
     <div
       ref={mapContainerRef}
       className="w-full h-full rounded-lg shadow-lg"
-      style={{ minHeight: "400px" }}
+      style={{ minHeight: "800px" }}
     />
   );
 };
