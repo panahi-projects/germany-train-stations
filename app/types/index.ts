@@ -8,7 +8,7 @@ export interface Station {
 
 export interface MapViewProps {
   stations: Station[];
-  selectedStationId: number | null;
+  selectedStationId?: number | null;
 }
 
 export interface UseStationsReturn {

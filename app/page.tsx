@@ -38,7 +38,7 @@ export default function Home() {
           </div>
           {/* Stations map view */}
           <div className="md:col-span-8 col-span-12">
-            <MapView />
+            <MapView stations={stations} />
           </div>
         </div>
       </Container>
