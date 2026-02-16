@@ -15,8 +15,8 @@ import { filterStationsByCity, getUniqueCities } from "./utils/stations";
 const MapView = dynamic(() => import("@/app/components/stations/map-view"), {
   ssr: false,
   loading: () => (
-    <div className="w-full h-full bg-gray-100 rounded-lg flex items-center justify-center">
-      <p className="text-gray-600">Loading map...</p>
+    <div className="w-full h-full bg-text-primary/5 rounded flex items-center justify-center border border-text-primary/10">
+      <p className="text-xs text-text-primary/60">Loading map...</p>
     </div>
   ),
 });
@@ -46,24 +46,29 @@ export default function Home() {
 
   if (loading) return <LoadingSpinner />;
   if (error) return <ErrorMessage message={error} />;
+
   return (
     <div>
-      <Container className="my-8">
-        <div className="grid grid-cols-12 gap-4">
+      <Container className="my-6">
+        <div className="grid grid-cols-12 gap-3">
           {/* Title */}
-          <div className="col-span-12 mb-4">
-            <h1 className="text-2xl font-bold">Train Stations in Germany</h1>
+          <div className="col-span-12 mb-2">
+            <h1 className="text-base font-medium text-text-primary-700 tracking-wide">
+              TRAIN STATIONS IN GERMANY
+            </h1>
+            <p className="text-xs text-text-primary-400/70 mt-0.5">
+              {filteredStations.length} stations • {cities.length} cities
+            </p>
           </div>
+
           {/* List of stations */}
-          <div className="md:col-span-4 col-span-12 mb-8 md:mb-0">
-            <div className="flex flex-col gap-4">
-              <div className="bg-white rounded-lg shadow-lg p-4">
-                <CityFilter
-                  cities={cities}
-                  selectedCity={selectedCity}
-                  onCityChange={handleCityChange}
-                />
-              </div>
+          <div className="md:col-span-4 col-span-12">
+            <div className="flex flex-col gap-3">
+              <CityFilter
+                cities={cities}
+                selectedCity={selectedCity}
+                onCityChange={handleCityChange}
+              />
               <StationsList
                 stations={filteredStations}
                 selectedStationId={selectedStationId}
@@ -71,8 +76,9 @@ export default function Home() {
               />
             </div>
           </div>
+
           {/* Stations map view */}
-          <div className="md:col-span-8 col-span-12 min-h-[800px]">
+          <div className="md:col-span-8 col-span-12 min-h-[600px]">
             <MapView
               selectedStationId={selectedStationId}
               stations={filteredStations}

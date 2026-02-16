@@ -34,18 +34,20 @@ export default function RootLayout({
       </head>
       <body className="antialiased flex flex-col min-h-screen">
         {/* Simple Header */}
-        <header className="bg-white shadow-sm border-b border-gray-200">
-          <div className="max-w-7xl mx-auto px-4 py-3">
+        <header className="border-b border-text-secondary-50">
+          <div className="max-w-7xl mx-auto px-4 py-2">
             <Container>
               <div className="flex items-center justify-between">
-                <div className="flex items-center space-x-3">
-                  <span className="text-2xl">🚂</span>
-                  <h1 className="text-xl font-bold text-gray-900">
-                    German Train Stations
+                <div className="flex items-center space-x-2">
+                  <span className="text-xl opacity-80">🚂</span>
+                  <h1 className="text-sm font-medium text-text-primary tracking-wide">
+                    GERMAN TRAIN STATIONS
                   </h1>
                 </div>
-                <nav className="hidden sm:flex space-x-4 text-sm text-gray-600">
-                  <span>Interactive Map</span>
+                <nav className="hidden sm:flex">
+                  <span className="text-xs text-text-primary">
+                    Interactive Map
+                  </span>
                 </nav>
               </div>
             </Container>
@@ -56,14 +58,14 @@ export default function RootLayout({
         <main className="flex-1">{children}</main>
 
         {/* Simple Footer */}
-        <footer className="bg-gray-50 border-t border-gray-200 py-4">
-          <div className="max-w-7xl mx-auto px-4 text-center text-sm text-gray-600">
-            <p>
-              Data sourced from public train station information | Made with ❤️
-              by Saeed Panahi |
-              <span className="ml-2">
-                Built with Next.js, Typescript & Leaflet
-              </span>
+        <footer className="border-t border-text-primary-50 py-3">
+          <div className="max-w-7xl mx-auto px-4 text-center">
+            <p className="text-xs text-text-primary/40">
+              Data sourced from public train station information • Made with ❤️
+              by Saeed Panahi
+            </p>
+            <p className="text-[10px] text-text-primary mt-1">
+              Next.js • TypeScript • Leaflet
             </p>
           </div>
         </footer>

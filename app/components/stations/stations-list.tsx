@@ -14,29 +14,39 @@ export default function StationsList({
   onStationClick,
 }: StationsListProps) {
   return (
-    <div className="bg-white rounded-lg shadow-lg p-4 overflow-hidden flex flex-col">
-      <h2 className="text-xl font-semibold mb-4 text-gray-800">
-        Stations ({stations.length})
+    <div className="bg-background-muted/30 backdrop-blur-sm border border-text-primary-200 rounded-md p-3 overflow-hidden flex flex-col">
+      <h2 className="text-sm font-medium mb-2 text-text-primary-400 tracking-wide">
+        STATIONS{" "}
+        <span className="text-text-secondary-500 ml-1">
+          ({stations.length})
+        </span>
       </h2>
-      <div className="overflow-y-auto flex-1" style={{ maxHeight: "600px" }}>
+      <div
+        className="overflow-y-auto flex-1 pr-1"
+        style={{ maxHeight: "600px" }}
+      >
         {stations.length === 0 ? (
-          <p className="text-gray-500 text-center py-8">No stations found</p>
+          <p className="text-text-primary-300/60 text-xs text-center py-6">
+            No stations found
+          </p>
         ) : (
-          <ul className="space-y-2">
+          <ul className="space-y-1.5">
             {stations.map((station) => (
               <li key={station.id}>
                 <button
                   onClick={() => onStationClick(station.id)}
-                  className={`w-full text-left px-4 py-3 rounded-lg transition-colors ${
+                  className={`w-full text-left px-3 py-2 rounded transition-all duration-200 ${
                     selectedStationId === station.id
-                      ? "bg-blue-100 border-2 border-blue-500"
-                      : "bg-gray-50 hover:bg-gray-100 border-2 border-transparent"
+                      ? "bg-text-secondary-500/10 border border-text-secondary-500"
+                      : "hover:bg-text-primary-200 border border-text-primary-50 hover:border-text-primary-300"
                   }`}
                 >
-                  <div className="font-medium text-gray-900">
+                  <div className="text-sm font-medium text-text-primary-700">
                     {station.name}
                   </div>
-                  <div className="text-sm text-gray-600">{station.city}</div>
+                  <div className="text-xs text-text-primary-400/80 mt-0.5">
+                    {station.city}
+                  </div>
                 </button>
               </li>
             ))}
