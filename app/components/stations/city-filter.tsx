@@ -10,7 +10,7 @@ const CityFilter = ({
     <div className="mb-4">
       <label
         htmlFor="city-filter"
-        className="block text-xs font-medium text-text-primary/60 mb-1.5 tracking-wide"
+        className="block text-xs font-medium text-text-primary-400 mb-1.5 tracking-wide"
       >
         FILTER BY CITY
       </label>

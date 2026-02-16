@@ -37,7 +37,7 @@ export default function StationsList({
                   onClick={() => onStationClick(station.id)}
                   className={`w-full text-left px-3 py-2 rounded transition-all duration-200 ${
                     selectedStationId === station.id
-                      ? "bg-text-secondary-500/10 border border-text-secondary-500"
+                      ? "bg-text-secondary-500 border border-text-secondary-500"
                       : "hover:bg-text-primary-200 border border-text-primary-50 hover:border-text-primary-300"
                   }`}
                 >
