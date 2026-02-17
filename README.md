@@ -1,36 +1,125 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Train Stations in Germany
 
-## Getting Started
+An interactive web application that displays train stations across Germany on a dynamic map with city-based filtering and station selection.
 
-First, run the development server:
+Built with Next.js, React, Leaflet, and TypeScript.
+
+## ✨ Features
+
+- 📍 Interactive map powered by Leaflet
+- 🏙️ Filter stations by city
+- 📋 Scrollable station list with selection highlight
+- 🎯 Click a station to focus and open its popup on the map
+- ⚡ Dynamic import to prevent SSR issues
+- 🎨 Clean, minimal UI styling
+
+## 🛠 Tech Stack
+
+- Framework: Next.js (App Router)
+- UI Library: React
+- Language: TypeScript
+- Mapping: Leaflet
+- Styling: Tailwind CSS
+
+## 🧠 How It Works
+
+### 1️⃣ Data Fetching
+
+`useStations()` is a custom hook responsible for:
+
+- Fetching station data
+- Handling loading state
+- Handling errors
+
+### 2️⃣ Filtering Logic
+
+Utility functions:
+
+- `getUniqueCities()` → extracts unique city names
+- `filterStationsByCity()` → filters stations by selected city
+- Memoization (`useMemo`) ensures efficient recalculation.
+
+### 3️⃣ Map Rendering
+
+The MapView component:
+
+- Dynamically imports Leaflet (`ssr: false`)
+- Initializes the map inside `useEffect`
+- Manages markers with `useRef`
+- Automatically fits bounds to visible stations
+- Focuses and opens popup when a station is selected
+
+To prevent SSR errors like:
+
+```ts
+ReferenceError: window is not defined
+```
+
+## 🚀 Getting Started
+
+### 1️⃣ Install dependencies
+
+```bash
+npm install
+```
+
+### 2️⃣ Run development server
 
 ```bash
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Visit:
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+```sh
+http://localhost:3000
+```
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+### 3️⃣ Production Build
 
-## Learn More
+```bash
+npm run build
+npm start
+```
 
-To learn more about Next.js, take a look at the following resources:
+## ⚠️ Important Notes
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+**Leaflet + Next.js**
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+Because Leaflet depends on `window`, it must:
 
-## Deploy on Vercel
+- Be dynamically imported
+- Be initialized inside useEffect
+- Avoid top-level imports
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+The map component uses:
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+```ts
+dynamic(() => import(...), { ssr: false })
+```
+
+to avoid server-side rendering issues.
+
+## UI Overview
+
+- Left panel: City filter + station list
+- Right panel: Interactive map
+- Selected station:
+  - Highlighted in list
+  - Focused on map
+  - Popup opened automatically
+
+## Possible Improvements
+
+- Add clustering for large datasets
+- Add search by station name
+- Add marker clustering plugin
+- Add dark mode
+- Add station details drawer
+- Connect to real API endpoint
+
+### Node.js version used:
+
+```bash
+v24.11.1
+```
